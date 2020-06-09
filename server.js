@@ -50,6 +50,6 @@ app.delete("api/notes/:id", function(req, res){
    res.end();
 }) 
 
-app.listen(7070, function() {
+app.listen(PORT, function() {
     console.log("App listening on PORT " + PORT);
   });
