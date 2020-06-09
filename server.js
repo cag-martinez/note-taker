@@ -35,17 +35,17 @@ app.post("/api/notes", function(req, res){
     
     fs.writeFile("db.json", JSON.stringify(notesObj), function(err){
        if(err) throw err;
-        console.log("You have posted note.");
+        console.log("Note added.");
     })
     res.json(newNote); 
 }); 
 app.delete("api/notes/:id", function(req, res){
-    var notesId = parseInt(req.params.id);
-    var removed = data.splice(notesId, 1);
+    var notesObj = parseInt(req.params.id);
+    var removed = data.splice(notesObj, 0, 1);
 
     fs.writeFile("db.json", JSON.stringify(removed), function(err){
         if (err) throw err;
-        console.log("You have deleted note.")
+        console.log("Note deleted.")
     });
    res.end();
 }) 
