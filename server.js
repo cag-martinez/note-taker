@@ -4,7 +4,7 @@ var PORT = process.env.PORT || 7070;
 var path = require("path");
 //var http = require("http");
 var fs = require('fs');
-var notesObj = [];
+var notesObj = require('./db.json');
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static("public"));
@@ -23,14 +23,11 @@ app.get("/", function(req, res){
 
 //api
 app.get("/api/notes", function(req, res){
-    fs.readFile("db.json", function(err, data){
-        if (err) throw err;
-        res.json(JSON.parse(data));
-    });
+        res.json(notesObj);
 })
 app.post("/api/notes", function(req, res){
     var newNote = req.body;
-    req.body.id = Date.now().toString();
+    req.body.id = Date.now();
     notesObj.push(newNote);
     
     fs.writeFile("db.json", JSON.stringify(notesObj), function(err){
@@ -39,15 +36,21 @@ app.post("/api/notes", function(req, res){
     })
     res.json(newNote); 
 }); 
-app.delete("api/notes/:id", function(req, res){
-    var notesObj = parseInt(req.params.id);
-    var removed = data.splice(notesObj, 0, 1);
+app.delete("/api/notes/:id", function(req, res){
+    
 
-    fs.writeFile("db.json", JSON.stringify(removed), function(err){
+    for (let i = 0; i < notesObj.length; i++) {
+        if(notesObj === parseInt(req.params.id)) notesObj.splice(i, 1) 
+    }
+    
+
+    fs.writeFile("db.json", JSON.stringify(notesObj), function(err){
         if (err) throw err;
+
         console.log("Note deleted.")
+        res.sendStatus(200)
     });
-   res.end();
+  
 }) 
 
 app.listen(PORT, function() {
